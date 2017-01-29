@@ -28,7 +28,15 @@ func AuthRequired() gin.HandlerFunc {
 		if token != "" {
 			c.Next()
 		} else {
-			c.AbortWithStatus(401)
+			AuthError(c, 401, "Auth-Token is required for access to API routes")
 		}
 	}
+}
+
+func AuthError(c *gin.Context, status int, err string) {
+	c.JSON(status, gin.H{
+		"status": status,
+		"err":    err,
+	})
+	c.Abort()
 }
